@@ -299,7 +299,7 @@ static void playMainLoop(App* app, struct playMainObjects* objs) {
   }
   if (objs->oldHealthPlayer2 != objs->secondPlayer.health) {
     SDL_DestroyTexture(objs->playerScore2->data.texture.texture);
-    objs->oldHealthPlayer1 =
+    objs->oldHealthPlayer2 =
         objs->secondPlayer.health > 0 ? objs->secondPlayer.health : 0;
     snprintf(temp, sizeof(temp), "HEALTH: %4d", objs->oldHealthPlayer2);
     objs->playerScore2->data.texture.texture = createTextTexture(

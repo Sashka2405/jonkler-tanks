@@ -101,7 +101,7 @@ void shoot(App* app, Player* firstPlayer, Player* secondPlayer,
   projectile->disableRendering = SDL_FALSE;
 
   // select the time interval for recalculations
-  const double dt = 1. / 10;
+  const double dt = 1. / 45;
   double currTime = 0.0;
 
   double vel;
@@ -431,7 +431,7 @@ void shoot(App* app, Player* firstPlayer, Player* secondPlayer,
       break;
     }
 
-    SDL_Delay(16);
+    SDL_Delay(3);
   }
 
   // hiding it again

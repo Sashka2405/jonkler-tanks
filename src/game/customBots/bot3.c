@@ -1,17 +1,16 @@
 #include "bot3.h"
 
-static Player* whoIsEnenmy(Player* currPlayer, Player* firstPlayer, Player* secondPlayer)
-{
+static Player* whoIsEnenmy(Player* currPlayer, Player* firstPlayer,
+                           Player* secondPlayer) {
   if (currPlayer == firstPlayer) return secondPlayer;
   return firstPlayer;
 }
 
-static void setPlayerCollision(
-  App* app, Player* enemy, Player* firstPlayer, Player* secondPlayer,
-  SDL_Point* collisionP1, SDL_Point* collisionP2, SDL_Point* collisionP3,
-  int32_t* collisionP1R, int32_t* collisionP2R, int32_t* collisionP3R
-)
-{
+static void setPlayerCollision(App* app, Player* enemy, Player* firstPlayer,
+                               Player* secondPlayer, SDL_Point* collisionP1,
+                               SDL_Point* collisionP2, SDL_Point* collisionP3,
+                               int32_t* collisionP1R, int32_t* collisionP2R,
+                               int32_t* collisionP3R) {
   if (app->currPlayer == secondPlayer) {
     *collisionP1 = getPixelScreenPosition(
         (SDL_Point){enemy->tankObj->data.texture.scaleRect.x,
@@ -63,33 +62,30 @@ static void setPlayerCollision(
   }
 }
 
-static void setWeaponStats(
-  int32_t currWeapon, RenderObject* projectile,
-  double* velMultiplicator, int32_t* explosionRadius, SDL_bool* isHittableNearby,
-  int32_t* maxPower
-)
-{
+static void setWeaponStats(int32_t currWeapon, RenderObject* projectile,
+                           double* velMultiplicator, int32_t* explosionRadius,
+                           SDL_bool* isHittableNearby, int32_t* maxPower) {
   switch (currWeapon) {
     // small bullet
     case 0:
       *velMultiplicator = 2;
       *explosionRadius = projectile->data.texture.constRect.w;
       *isHittableNearby = SDL_FALSE;
-      *maxPower = 99;
+      *maxPower = 50;
       break;
     // BIG BULLET
     case 1:
       *velMultiplicator = 1.75;
       *explosionRadius = projectile->data.texture.constRect.w;
       *isHittableNearby = SDL_FALSE;
-      *maxPower = 99;
+      *maxPower = 50;
       break;
     // small boom
     case 2:
       *velMultiplicator = 1.25;
       *explosionRadius = projectile->data.texture.constRect.w * 2;
       *isHittableNearby = SDL_TRUE;
-      *maxPower = 99;
+      *maxPower = 75;
       break;
     // BIG BOOM
     case 3:
@@ -106,28 +102,18 @@ static void setWeaponStats(
   }
 }
 
-void theGothGambit(
-  App* app,
-  Player* firstPlayer,
-  Player* secondPlayer,
-  int32_t* heightMap,
-  RenderObject* projectile,
-  RenderObject* explosion,
-  SDL_bool* regenMap,
-  SDL_bool* recalcBulletPath,
-  double initGunAngle
-)
-{
+void theGothGambit(App* app, Player* firstPlayer, Player* secondPlayer,
+                   int32_t* heightMap, RenderObject* projectile,
+                   RenderObject* explosion, SDL_bool* regenMap,
+                   SDL_bool* recalcBulletPath, double initGunAngle) {
   Player* enemy = whoIsEnenmy(app->currPlayer, firstPlayer, secondPlayer);
 
   SDL_Point collisionP1, collisionP2, collisionP3;
   int32_t collisionP1R, collisionP2R, collisionP3R;
 
-  setPlayerCollision(
-    app, enemy, firstPlayer, secondPlayer,
-    &collisionP1, &collisionP2, &collisionP3,
-    &collisionP1R, &collisionP2R, &collisionP3R
-  );
+  setPlayerCollision(app, enemy, firstPlayer, secondPlayer, &collisionP1,
+                     &collisionP2, &collisionP3, &collisionP1R, &collisionP2R,
+                     &collisionP3R);
 
   SDL_Point initPos = getPixelScreenPosition(
       (SDL_Point){app->currPlayer->tankObj->data.texture.scaleRect.x,
@@ -152,18 +138,16 @@ void theGothGambit(
   SDL_bool isHittableNearby;
   int32_t maxPower;
 
-  setWeaponStats(
-    app->currWeapon, projectile,
-    &velMultiplicator, &explosionRadius, &isHittableNearby, &maxPower
-  );
-
-  SDL_bool isFinded = SDL_FALSE;
+  setWeaponStats(app->currWeapon, projectile, &velMultiplicator,
+                 &explosionRadius, &isHittableNearby, &maxPower);
 
   for (int32_t angle = 120; angle >= 0; --angle) {
     double currAngle = app->currPlayer->tankGunObj->data.texture.angle;
 
-    if (app->currPlayer == secondPlayer) currAngle += 180 + angle;
-    else currAngle += -angle;
+    if (app->currPlayer == secondPlayer)
+      currAngle += 180 + angle;
+    else
+      currAngle += -angle;
 
     currAngle = round(currAngle);
     currAngle = 360 - normalizeAngle(currAngle);
@@ -186,13 +170,12 @@ void theGothGambit(
         recalcPlayerPos(app, secondPlayer, heightMap, 0, 8);
         return;
       }
-      
     }
   }
   smoothChangeAngle(app->currPlayer, app->currPlayer->gunAngle, &app->currState,
                     recalcBulletPath);
-  smoothChangePower(app->currPlayer, app->currPlayer->firingPower, &app->currState,
-                    recalcBulletPath);
+  smoothChangePower(app->currPlayer, app->currPlayer->firingPower,
+                    &app->currState, recalcBulletPath);
   SDL_Delay(200);
   shoot(app, firstPlayer, secondPlayer, projectile, explosion, heightMap,
         regenMap);
