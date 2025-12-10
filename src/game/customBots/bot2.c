@@ -190,8 +190,8 @@ void bot2Main(App* app, Player* firstPlayer, Player* secondPlayer,
                                        currAngle, heightMap, app, &collisionP1,
                                        &collisionP2, &collisionP3, collisionP1R,
                                        collisionP2R, collisionP3R, projectile, AVG(windStrengthMin, windStrengthMax));
-      if (hitPos < -1 && currAngle>bestAngle) {
-        bestAngle = currAngle;
+      if (hitPos < -1 && angle>bestAngle) {
+        bestAngle = angle;
         bestPower = firingPower;
         isFinded = SDL_TRUE;
       }
@@ -215,15 +215,11 @@ void bot2Main(App* app, Player* firstPlayer, Player* secondPlayer,
     } else {
       smoothMove(app, SDL_FALSE, SDL_FALSE, heightMap, obstacles);
     }
-    bot2Main(app, firstPlayer, secondPlayer, heightMap, projectile, explosion,
-             regenMap, recalcBulletPath, initGunAngle);
   }
-  else
-  {
+
     shoot(app, firstPlayer, secondPlayer, projectile, explosion, heightMap,
           regenMap);
     recalcPlayerPos(app, firstPlayer, heightMap, 0, 5);
     recalcPlayerPos(app, secondPlayer, heightMap, 0, 8);
-  }
   return;
 }
