@@ -143,7 +143,7 @@ void bot2Main(App* app, Player* firstPlayer, Player* secondPlayer,
   int32_t hitPos =
       calcHitPosition(&currPos, initVel, initGunAngle, heightMap, app,
                       &collisionP1, &collisionP2, &collisionP3, collisionP1R,
-                      collisionP2R, collisionP3R, projectile);
+                      collisionP2R, collisionP3R, projectile, AVG(windStrengthMin, windStrengthMax));
   if (hitPos < -1) {
     SDL_Delay(200);
 
@@ -187,7 +187,7 @@ void bot2Main(App* app, Player* firstPlayer, Player* secondPlayer,
       int32_t hitPos = calcHitPosition(&currPos, firingPower * velMultiplicator,
                                        currAngle, heightMap, app, &collisionP1,
                                        &collisionP2, &collisionP3, collisionP1R,
-                                       collisionP2R, collisionP3R, projectile);
+                                       collisionP2R, collisionP3R, projectile, AVG(windStrengthMin, windStrengthMax));
       if (hitPos < -1 && currAngle>bestAngle) {
         bestAngle = currAngle;
         bestPower = firingPower;
