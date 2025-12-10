@@ -86,7 +86,7 @@ int32_t calcHitPosition(SDL_FPoint* initPos, double initVel, double angle,
                         const SDL_Point* collision2,
                         const SDL_Point* collision3, const int32_t collision1R,
                         const int32_t collision2R, const int32_t collision3R,
-                        RenderObject* projectile) {
+                        RenderObject* projectile, double windStrength) {
   double angleRad = DEGTORAD(angle);
   double vx = initVel * cos(angleRad);
   double vy = initVel * sin(angleRad);
@@ -103,7 +103,6 @@ int32_t calcHitPosition(SDL_FPoint* initPos, double initVel, double angle,
 
   double windAngleRad = DEGTORAD(normalizeAngle(
       360 - app->globalConditions.wind.directionIcon->data.texture.angle));
-  double windStrength = app->globalConditions.wind.windStrength;
   double windStrengthX = windStrength * cos(windAngleRad);
   double windStrengthY = windStrength * sin(windAngleRad);
 
@@ -122,8 +121,6 @@ int32_t calcHitPosition(SDL_FPoint* initPos, double initVel, double angle,
 
     projectile->data.texture.angle = 360 - atan2(dy, dx) * 180.0 / M_PI;
 
-    // currX = initPos->x + vx * currTime;
-    // currY = initPos->y - (vy * currTime - 0.5 * G * currTime * currTime);
     currX = initPos->x + relativePos.x;
     currY = initPos->y - relativePos.y;
 
@@ -144,7 +141,7 @@ int32_t calcHitPosition(SDL_FPoint* initPos, double initVel, double angle,
     // hit at obstacles
     // res will be currXscaled_currYScaled
     if (checkObstacleCollisions(currX, currY, SDL_TRUE)) {
-      return currXScaled * 10000 + currYScaled;
+      return INT_MAX_VAL;
     }
 
     // successful hit
