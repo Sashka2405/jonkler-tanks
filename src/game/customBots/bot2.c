@@ -138,6 +138,8 @@ void bot2Main(App* app, Player* firstPlayer, Player* secondPlayer,
       isHittableNearby = SDL_FALSE;
       break;
   }
+  int32_t windStrengthMin, windStrengthMax;
+  getWindRange(app, &windStrengthMin, &windStrengthMax);
 
   int32_t initVel = app->currPlayer->firingPower * velMultiplicator;
   int32_t hitPos =
